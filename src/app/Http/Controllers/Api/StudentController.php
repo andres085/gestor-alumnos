@@ -33,12 +33,29 @@ class StudentController extends Controller
 
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
-
         $student = Student::findOrFail($id);
+
+        $student->update([
+            'apellido' => $request->apellido,
+            'nombre' => $request->nombre,
+            'dni' => $request->dni,
+            'telefono' => $request->telefono,
+            'email' => $request->email,
+            'direccion' => $request->direccion
+        ]);
 
         return response()->json(new StudentResource($student));
 
+    }
+
+    public function destroy($id)
+    {
+        $student = Student::findOrFail($id);
+
+        $student->delete();
+
+        return response()->json([], 204);
     }
 }

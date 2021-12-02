@@ -64,6 +64,49 @@ class StudentControllerTest extends TestCase
 
     }
 
+    public function test_can_update_a_student()
+    {
+
+        $this->withoutExceptionHandling();
+
+        $student = Student::factory()->create();
+
+        $response = $this->put('api/students/'.$student->id, [
+            'id' => $student->id,
+            'apellido' => 'Paquito',
+            'nombre' => $student->nombre,
+            'dni' => (string)$student->dni,
+            'telefono' => $student->telefono,
+            'email' => $student->email,
+            'direccion' => 'Las Heras 1732',
+        ]);
+
+        $response->assertStatus(200)->assertJson([
+            'apellido' => 'Paquito',
+            'direccion' => 'Las Heras 1732',
+        ]);
+
+    }
+
+    public function test_will_fail_is_student_to_be_deleted_is_not_found()
+    {
+        
+        $response = $this->delete('api/students/-1');
+
+        $response->assertStatus(404);
+
+    }
+
+    public function test_a_student_can_be_deleted()
+    {
+
+        $student = Student::factory()->create();
+
+        $response = $this->delete('api/students/'.$student->id);
+
+        $this->assertDatabaseMissing('students', $student->toArray());
+    }
+
     // public function test_apellido_is_required()
     // {
     //     $student = Student::factory()->create();
