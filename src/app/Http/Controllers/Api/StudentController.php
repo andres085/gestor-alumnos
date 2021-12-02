@@ -32,4 +32,13 @@ class StudentController extends Controller
         return response()->json(new StudentResource($student));
 
     }
+
+    public function update($id)
+    {
+
+        $student = Student::findOrFail($id);
+
+        return response()->json(new StudentResource($student));
+
+    }
 }
