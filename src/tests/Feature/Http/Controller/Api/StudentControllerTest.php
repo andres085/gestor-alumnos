@@ -115,10 +115,10 @@ class StudentControllerTest extends TestCase
             'direccion' => 'Colapiche 183'
         ]);
 
-        $response->assertStatus(422)->assertJsonPath('errors.apellido', ["The apellido field is required."])
-        ->assertJsonPath('errors.nombre', ["The nombre field is required."])
-        ->assertJsonPath('errors.dni', ["The dni field is required."])
-        ->assertJsonPath('errors.telefono', ["The telefono field is required."]);
+        $response->assertStatus(422)->assertJsonPath('errors.apellido', ["El campo apellido es requerido"])
+        ->assertJsonPath('errors.nombre', ["El campo nombre es requerido"])
+        ->assertJsonPath('errors.dni', ["El campo dni es requerido"])
+        ->assertJsonPath('errors.telefono', ["El campo telefono es requerido"]);
         
     }
 
@@ -134,7 +134,7 @@ class StudentControllerTest extends TestCase
             'direccion' => 'Colapiche 183'
         ]);
 
-        $response->assertStatus(422)->assertJsonPath('errors.email', ['The email must be a valid email address.']);
+        $response->assertStatus(422)->assertJsonPath('errors.email', ['El campo email debe ser valido']);
     }
 
     public function test_direccion_is_min_length_of_5()
@@ -149,7 +149,7 @@ class StudentControllerTest extends TestCase
             'direccion' => 'Cola'
         ]);
 
-        $response->assertStatus(422)->assertJsonPath('errors.direccion', ["The direccion must be at least 5  characters."]);
+        $response->assertStatus(422)->assertJsonPath('errors.direccion', ['El campo dirección no puede contener un minimo de 5 caracteres']);
 
     }
 
@@ -165,7 +165,7 @@ class StudentControllerTest extends TestCase
             'direccion' => 'Colapiche 183 Viedma Rio Negro, Barrio Don Bosco'
         ]);
 
-        $response->assertStatus(422)->assertJsonPath('errors.direccion', ["The direccion must not be greater than 30 characters."]);
+        $response->assertStatus(422)->assertJsonPath('errors.direccion', ['El campo dirección no puede contener un maximo de 30 caracteres']);
 
     }
 

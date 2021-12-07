@@ -6,32 +6,18 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentResource;
+use App\Http\Requests\StudentStoreRequest;
 
 class StudentController extends Controller
 {
     //
-    public function store(Request $request)
+    public function store(StudentStoreRequest $request)
     {   
 
-        $this->validate($request, [
-            'apellido' => 'required',
-            'nombre' => 'required',
-            'dni' => 'required | integer',
-            'telefono' => 'required',
-            'email' => 'email',
-            'direccion' => 'min:5 | max:30'
-        ]);
-
-        $student = Student::create([
-            'apellido' => $request->apellido,
-            'nombre' => $request->nombre,
-            'dni' => $request->dni,
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'direccion' => $request->direccion
-        ]);
+        $student = Student::create($request->validated());
 
         return response()->json(new StudentResource($student), 201);
+        
     }
 
     public function show($id)
