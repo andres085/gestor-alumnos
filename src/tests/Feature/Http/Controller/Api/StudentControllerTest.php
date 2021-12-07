@@ -107,18 +107,66 @@ class StudentControllerTest extends TestCase
         $this->assertDatabaseMissing('students', $student->toArray());
     }
 
-    // public function test_apellido_is_required()
-    // {
-    //     $student = Student::factory()->create();
+    public function test_required_fields()
+    {
+        
+        $response = $this->postJson('/api/students', [
+            'email' => 'andres@mail.com',
+            'direccion' => 'Colapiche 183'
+        ]);
 
-    //     $response = $this->json('POST', '/api/students', [
-    //         'nombre' => 'Andrés',
-    //         'dni' => 31794897,
-    //         'telefono' => '2920-542448',
-    //         'email' => 'andres@mail.com',
-    //         'direccion' => 'Colapiche 183'
-    //     ]);
+        $response->assertStatus(422)->assertJsonPath('errors.apellido', ["The apellido field is required."])
+        ->assertJsonPath('errors.nombre', ["The nombre field is required."])
+        ->assertJsonPath('errors.dni', ["The dni field is required."])
+        ->assertJsonPath('errors.telefono', ["The telefono field is required."]);
+        
+    }
 
-    //     $this->assertHasValidationError('apellido', $response);
-    // }
+    public function test_email_is_valid()
+    {
+
+        $response = $this->postJson('/api/students', [
+            'apellido' => 'Martinez',
+            'nombre' => 'Andres',
+            'dni' => 31794897,
+            'telefono' => '2920-542448',
+            'email' => 'andres-mail.com',
+            'direccion' => 'Colapiche 183'
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.email', ['The email must be a valid email address.']);
+    }
+
+    public function test_direccion_is_min_length_of_5()
+    {
+
+        $response = $this->postJson('/api/students', [
+            'apellido' => 'Martinez',
+            'nombre' => 'Andres',
+            'dni' => 31794897,
+            'telefono' => '2920-542448',
+            'email' => 'andres@mail.com',
+            'direccion' => 'Cola'
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.direccion', ["The direccion must be at least 5  characters."]);
+
+    }
+
+    public function test_direccion_is_max_length_of_30()
+    {
+
+        $response = $this->postJson('/api/students', [
+            'apellido' => 'Martinez',
+            'nombre' => 'Andres',
+            'dni' => 31794897,
+            'telefono' => '2920-542448',
+            'email' => 'andres@mail.com',
+            'direccion' => 'Colapiche 183 Viedma Rio Negro, Barrio Don Bosco'
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.direccion', ["The direccion must not be greater than 30 characters."]);
+
+    }
+
 }

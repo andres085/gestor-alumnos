@@ -11,7 +11,17 @@ class StudentController extends Controller
 {
     //
     public function store(Request $request)
-    {
+    {   
+
+        $this->validate($request, [
+            'apellido' => 'required',
+            'nombre' => 'required',
+            'dni' => 'required | integer',
+            'telefono' => 'required',
+            'email' => 'email',
+            'direccion' => 'min:5 | max:30'
+        ]);
+
         $student = Student::create([
             'apellido' => $request->apellido,
             'nombre' => $request->nombre,
