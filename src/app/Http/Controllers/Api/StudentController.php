@@ -29,27 +29,18 @@ class StudentController extends Controller
 
     }
 
-    public function update(Request $request, $id)
+    public function update(StudentStoreRequest $request, Student $student)
     {
-        $student = Student::findOrFail($id);
 
-        $student->update([
-            'apellido' => $request->apellido,
-            'nombre' => $request->nombre,
-            'dni' => $request->dni,
-            'telefono' => $request->telefono,
-            'email' => $request->email,
-            'direccion' => $request->direccion
-        ]);
+        $student->update($request->validated());
 
         return response()->json(new StudentResource($student));
 
     }
 
-    public function destroy($id)
+    public function destroy(Student $student)
     {
-        $student = Student::findOrFail($id);
-
+        
         $student->delete();
 
         return response()->json([], 204);
