@@ -20,11 +20,10 @@ class StudentController extends Controller
         
     }
 
-    public function show($id)
+    public function show(Student $student)
     {
-
-        $student = Student::findOrFail($id);
-
+        dd($student);
+        
         return response()->json(new StudentResource($student));
 
     }
@@ -40,7 +39,7 @@ class StudentController extends Controller
 
     public function destroy(Student $student)
     {
-        
+
         $student->delete();
 
         return response()->json([], 204);

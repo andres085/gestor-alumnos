@@ -88,6 +88,15 @@ class StudentControllerTest extends TestCase
 
     }
 
+    public function test_will_fail_is_student_to_be_show_is_not_found()
+    {
+
+        $response = $this->get('api/students/-1');
+
+        $response->assertStatus(404);
+
+    }
+
     public function test_will_fail_is_student_to_be_deleted_is_not_found()
     {
         
