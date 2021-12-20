@@ -16,7 +16,7 @@ class RotationFactory extends Factory
     {
         return [
             'numero' => 1,
-            'fecha' => Carbon::now(),
+            'fecha' => Carbon::parse('+1 week'),
             'observaciones' => "Lorem ipsum, dolor sit amet consectetur adipisicing elit.",
         ];
     }

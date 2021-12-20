@@ -22,8 +22,7 @@ class StudentController extends Controller
 
     public function show(Student $student)
     {
-        dd($student);
-        
+
         return response()->json(new StudentResource($student));
 
     }

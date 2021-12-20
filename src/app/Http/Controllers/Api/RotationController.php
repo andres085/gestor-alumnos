@@ -20,4 +20,9 @@ class RotationController extends Controller
 
         return response()->json($rotation, 201);
     }
+
+    public function show(Rotation $rotation)
+    {
+        return response()->json($rotation);
+    }
 }
