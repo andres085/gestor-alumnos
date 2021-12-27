@@ -25,4 +25,23 @@ class RotationController extends Controller
     {
         return response()->json($rotation);
     }
+
+    public function update(Request $request)
+    {
+        $rotation = Rotation::findOrFail($request->id);
+
+        $rotation->update([
+            'fecha' => $request->fecha,
+            'observaciones' => $request->observaciones,
+        ]);
+
+        return response()->json($rotation, 200);
+    }
+
+    public function destroy(Rotation $rotation)
+    {
+        $rotation->delete();
+
+        return response()->json([], 204);
+    }
 }

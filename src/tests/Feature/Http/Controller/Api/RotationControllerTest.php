@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controller\Api;
 
+use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Rotation;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -45,12 +46,34 @@ class RotationControllerTest extends TestCase
 
         $response = $this->get('api/rotations/'. $rotation->id);
 
-        $response->assertStatus(200)->assertJson([
-            'id' => $rotation->id,
-            'fecha' => $rotation->formatted_date,
-            'observaciones' => $rotation->observaciones,
-        ]);
+        $response->assertStatus(200)->assertJson($rotation->toArray());
 
     }
+
+    public function test_can_update_a_rotation()
+    {
+        $rotation = Rotation::factory()->create([
+            'observaciones' => 'Este es un texto de prueba'
+        ]);
+
+        $response = $this->put('api/rotations/'. $rotation->id, $rotation->toArray());
+
+        $response->assertStatus(200)->assertJson([
+            'observaciones' => $rotation->observaciones
+        ]);
+    }
+
+    public function test_delete_a_rotation()
+    {
+        $rotation = Rotation::factory()->create();
+        
+        $response = $this->delete('api/rotations/'.$rotation->id);
+
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('rotations', $rotation->toArray());
+    }
+    
+    
 
 }

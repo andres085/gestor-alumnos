@@ -25,4 +25,8 @@ class Rotation extends Model
         return $this->fecha->format('d/m/Y');
     }
 
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }
