@@ -30,6 +30,15 @@ class RotationControllerTest extends TestCase
         ]);
     }
 
+    public function test_can_get_all_rotations()
+    {
+        $this->withoutExceptionHandling();
+
+        $response = $this->getJson(route('rotations.index'));
+
+        $response->assertStatus(200);
+    }
+
     public function test_error_404_if_rotation_not_found()
     {
 

@@ -9,6 +9,14 @@ use App\Http\Controllers\Controller;
 class RotationController extends Controller
 {
     //
+
+    public function index()
+    {
+        $rotations = Rotation::all();
+
+        return response()->json($rotations, 200);
+    }
+
     public function store(Request $request)
     {
         $rotation = Rotation::create([
