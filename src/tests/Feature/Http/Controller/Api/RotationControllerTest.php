@@ -80,4 +80,26 @@ class RotationControllerTest extends TestCase
 
         $this->assertDatabaseMissing('rotations', $rotation->toArray());
     }
+
+    public function test_fecha_field_is_required()
+    {
+
+        $response = $this->postJson(route('rotations.store'), [
+            'numero' => 1,
+            'observaciones' => 'Test rotation 123'
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.fecha', ["El campo fecha es requerido"]);
+    }
+
+    public function test_numero_field_is_required()
+    {
+
+        $response = $this->postJson(route('rotations.store'), [
+            'fecha' => Carbon::now(),
+            'observaciones' => 'Test rotation 123'
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.numero', ["El campo numero es requerido"]);
+    }
 }

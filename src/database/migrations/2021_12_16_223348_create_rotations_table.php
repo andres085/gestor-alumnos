@@ -17,7 +17,7 @@ class CreateRotationsTable extends Migration
             $table->id();
             $table->integer('numero');
             $table->datetime('fecha');
-            $table->text('observaciones');
+            $table->text('observaciones')->nullable();
             $table->timestamps();
         });
     }
