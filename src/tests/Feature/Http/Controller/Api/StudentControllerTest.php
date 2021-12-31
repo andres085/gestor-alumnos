@@ -18,7 +18,7 @@ class StudentControllerTest extends TestCase
 
         $student = Student::factory()->create();
 
-        $response = $this->post('/api/students', $student->toArray());
+        $response = $this->postJson(route('students.store'), $student->toArray());
 
         $response->assertJsonStructure(['id', 'apellido', 'nombre', 'dni', 'telefono', 'email', 'direccion'])->assertStatus(201);
 
@@ -30,7 +30,7 @@ class StudentControllerTest extends TestCase
     public function test_error_404_if_student_not_found()
     {
 
-        $response = $this->get('api/students/-1');
+        $response = $this->getJson('students.show');
 
         $response->assertStatus(404);
     }
@@ -40,28 +40,26 @@ class StudentControllerTest extends TestCase
 
         $student = Student::factory()->create();
 
-        $response = $this->get('api/students/'.$student->id);
+        $response = $this->getJson(route('students.show', $student->id));
 
         $response->assertStatus(200)
-        ->assertExactJson([
-            'id' => $student->id,
-            'apellido' => $student->apellido,
-            'nombre' => $student->nombre,
-            'dni' => (string)$student->dni,
-            'telefono' => $student->telefono,
-            'email' => $student->email,
-            'direccion' => $student->direccion,
-        ]);
-        
+            ->assertExactJson([
+                'id' => $student->id,
+                'apellido' => $student->apellido,
+                'nombre' => $student->nombre,
+                'dni' => (string)$student->dni,
+                'telefono' => $student->telefono,
+                'email' => $student->email,
+                'direccion' => $student->direccion,
+            ]);
     }
 
     public function test_will_fail_is_student_to_update_is_not_found()
     {
 
-        $response = $this->put('api/students/-1');
+        $response = $this->putJson(route('students.update', -1));
 
         $response->assertStatus(404);
-
     }
 
     public function test_can_update_a_student()
@@ -71,7 +69,7 @@ class StudentControllerTest extends TestCase
 
         $student = Student::factory()->create();
 
-        $response = $this->put('api/students/'.$student->id, [
+        $response = $this->putJson(route('students.update', $student->id), [
             'id' => $student->id,
             'apellido' => 'Paquito',
             'nombre' => $student->nombre,
@@ -85,25 +83,14 @@ class StudentControllerTest extends TestCase
             'apellido' => 'Paquito',
             'direccion' => 'Las Heras 1732',
         ]);
-
-    }
-
-    public function test_will_fail_is_student_to_be_show_is_not_found()
-    {
-
-        $response = $this->get('api/students/-1');
-
-        $response->assertStatus(404);
-
     }
 
     public function test_will_fail_is_student_to_be_deleted_is_not_found()
     {
-        
-        $response = $this->delete('api/students/-1');
+
+        $response = $this->deleteJson(route('students.destroy', -1));
 
         $response->assertStatus(404);
-
     }
 
     public function test_a_student_can_be_deleted()
@@ -111,30 +98,31 @@ class StudentControllerTest extends TestCase
 
         $student = Student::factory()->create();
 
-        $response = $this->delete('api/students/'.$student->id);
+        $response = $this->deleteJson(route('students.destroy', $student->id));
+
+        $response->assertStatus(204);
 
         $this->assertDatabaseMissing('students', $student->toArray());
     }
 
     public function test_required_fields()
     {
-        
-        $response = $this->postJson('/api/students', [
+
+        $response = $this->postJson(route('students.store'), [
             'email' => 'andres@mail.com',
             'direccion' => 'Colapiche 183'
         ]);
 
         $response->assertStatus(422)->assertJsonPath('errors.apellido', ["El campo apellido es requerido"])
-        ->assertJsonPath('errors.nombre', ["El campo nombre es requerido"])
-        ->assertJsonPath('errors.dni', ["El campo dni es requerido"])
-        ->assertJsonPath('errors.telefono', ["El campo telefono es requerido"]);
-        
+            ->assertJsonPath('errors.nombre', ["El campo nombre es requerido"])
+            ->assertJsonPath('errors.dni', ["El campo dni es requerido"])
+            ->assertJsonPath('errors.telefono', ["El campo telefono es requerido"]);
     }
 
     public function test_email_is_valid()
     {
 
-        $response = $this->postJson('/api/students', [
+        $response = $this->postJson(route('students.store'), [
             'apellido' => 'Martinez',
             'nombre' => 'Andres',
             'dni' => 31794897,
@@ -149,7 +137,7 @@ class StudentControllerTest extends TestCase
     public function test_direccion_is_min_length_of_5()
     {
 
-        $response = $this->postJson('/api/students', [
+        $response = $this->postJson(route('students.store'), [
             'apellido' => 'Martinez',
             'nombre' => 'Andres',
             'dni' => 31794897,
@@ -159,13 +147,12 @@ class StudentControllerTest extends TestCase
         ]);
 
         $response->assertStatus(422)->assertJsonPath('errors.direccion', ['El campo dirección no puede contener un minimo de 5 caracteres']);
-
     }
 
     public function test_direccion_is_max_length_of_30()
     {
 
-        $response = $this->postJson('/api/students', [
+        $response = $this->postJson(route('students.store'), [
             'apellido' => 'Martinez',
             'nombre' => 'Andres',
             'dni' => 31794897,
@@ -175,7 +162,5 @@ class StudentControllerTest extends TestCase
         ]);
 
         $response->assertStatus(422)->assertJsonPath('errors.direccion', ['El campo dirección no puede contener un maximo de 30 caracteres']);
-
     }
-
 }

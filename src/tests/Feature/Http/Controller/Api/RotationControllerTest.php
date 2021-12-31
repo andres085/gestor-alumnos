@@ -20,7 +20,7 @@ class RotationControllerTest extends TestCase
 
         $rotation = Rotation::factory()->create();
 
-        $response = $this->post('api/rotations', $rotation->toArray());
+        $response = $this->postJson(route('rotations.store'), $rotation->toArray());
 
         $response->assertJsonStructure(['id', 'numero', 'fecha', 'observaciones'])->assertStatus(201);
 
@@ -28,13 +28,12 @@ class RotationControllerTest extends TestCase
             'numero' => $rotation->numero,
             'fecha' => $rotation->fecha
         ]);
-    
     }
 
     public function test_error_404_if_rotation_not_found()
     {
 
-        $response = $this->get('api/rotations/-1');
+        $response = $this->getJson('api/rotations/-1');
 
         $response->assertStatus(404);
     }
@@ -44,10 +43,9 @@ class RotationControllerTest extends TestCase
 
         $rotation = Rotation::factory()->create();
 
-        $response = $this->get('api/rotations/'. $rotation->id);
+        $response = $this->getJson(route('rotations.show', $rotation->id));
 
         $response->assertStatus(200)->assertJson($rotation->toArray());
-
     }
 
     public function test_can_update_a_rotation()
@@ -56,7 +54,7 @@ class RotationControllerTest extends TestCase
             'observaciones' => 'Este es un texto de prueba'
         ]);
 
-        $response = $this->put('api/rotations/'. $rotation->id, $rotation->toArray());
+        $response = $this->putJson(route('rotations.update', $rotation->id), $rotation->toArray());
 
         $response->assertStatus(200)->assertJson([
             'observaciones' => $rotation->observaciones
@@ -66,14 +64,11 @@ class RotationControllerTest extends TestCase
     public function test_delete_a_rotation()
     {
         $rotation = Rotation::factory()->create();
-        
-        $response = $this->delete('api/rotations/'.$rotation->id);
+
+        $response = $this->deleteJson(route('rotations.destroy', $rotation->id));
 
         $response->assertStatus(204);
 
         $this->assertDatabaseMissing('rotations', $rotation->toArray());
     }
-    
-    
-
 }

@@ -11,7 +11,6 @@ class RotationController extends Controller
     //
     public function store(Request $request)
     {
-
         $rotation = Rotation::create([
             'numero' => $request->numero,
             'fecha' => $request->fecha,
