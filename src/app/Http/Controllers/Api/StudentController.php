@@ -11,21 +11,26 @@ use App\Http\Requests\StudentStoreRequest;
 class StudentController extends Controller
 {
     //
+
+    public function index()
+    {
+        $students = Student::all();
+
+        return response()->json(($students), 200);
+    }
+
     public function store(StudentStoreRequest $request)
-    {   
+    {
 
         $student = Student::create($request->validated());
 
         return response()->json(new StudentResource($student), 201);
-        
     }
 
     public function show(Student $student)
     {
-        dd($student);
-        
-        return response()->json(new StudentResource($student));
 
+        return response()->json(new StudentResource($student));
     }
 
     public function update(StudentStoreRequest $request, Student $student)
@@ -34,7 +39,6 @@ class StudentController extends Controller
         $student->update($request->validated());
 
         return response()->json(new StudentResource($student));
-
     }
 
     public function destroy(Student $student)
