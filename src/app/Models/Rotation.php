@@ -16,10 +16,6 @@ class Rotation extends Model
         'observaciones'
     ];
 
-    protected $casts = [
-        'fecha' => 'datetime:d/m/Y',
-    ];
-
     public function getFormattedDateAttribute()
     {
         return $this->fecha->format('d/m/Y');

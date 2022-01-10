@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Rotation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RotationResource;
 use App\Http\Requests\RotationStoreRequest;
 
 class RotationController extends Controller
@@ -20,11 +21,9 @@ class RotationController extends Controller
 
     public function store(RotationStoreRequest $request)
     {
-        dd($request->json());
-
         $rotation = Rotation::create($request->validated());
 
-        return response()->json($rotation, 201);
+        return response()->json(new RotationResource($rotation), 201);
     }
 
     public function show(Rotation $rotation)

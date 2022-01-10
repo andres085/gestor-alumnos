@@ -26,7 +26,8 @@ class RotationControllerTest extends TestCase
 
         $this->assertDatabaseHas('rotations', [
             'numero' => $rotation->numero,
-            'fecha' => $rotation->fecha
+            'fecha' => $rotation->fecha,
+            'observaciones' => $rotation->observaciones,
         ]);
     }
 
