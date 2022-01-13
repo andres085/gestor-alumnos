@@ -16,11 +16,12 @@ class StudentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'apellido' => $this->apellido, 
-            'nombre' => $this->nombre, 
-            'dni' => $this->dni, 
-            'telefono' => $this->telefono, 
-            'email' => $this->email, 
+            'rotation_id' => $this->rotation_id,
+            'apellido' => $this->apellido,
+            'nombre' => $this->nombre,
+            'dni' => $this->dni,
+            'telefono' => $this->telefono,
+            'email' => $this->email,
             'direccion' => $this->direccion
         ];
     }

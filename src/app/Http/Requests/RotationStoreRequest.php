@@ -26,6 +26,7 @@ class RotationStoreRequest extends FormRequest
         return [
             'fecha' => 'required',
             'numero' => 'required',
+            'observaciones' => 'nullable',
         ];
     }
 
