@@ -24,6 +24,7 @@ class StudentStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'rotation_id' => 'nullable',
             'apellido' => 'required',
             'nombre' => 'required',
             'dni' => 'required | integer',
