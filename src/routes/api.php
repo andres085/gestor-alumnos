@@ -23,4 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('/students', StudentController::class);
 Route::resource('/rotations', RotationController::class);
-Route::get('/rotations/{id}/students', [RotationStudentController::class, 'index']);
+Route::apiResource('/rotations/{id}/students', RotationStudentController::class);

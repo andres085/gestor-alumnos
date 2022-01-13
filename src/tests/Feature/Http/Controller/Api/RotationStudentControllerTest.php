@@ -26,13 +26,6 @@ class RotationStudentControllerTest extends TestCase
         $student1 = Student::factory()->create([
             'rotation_id' => $rotation->id
         ]);
-        $student2 = Student::factory()->create([
-            'rotation_id' => $rotation->id
-        ]);
-        $student3 = Student::factory()->create([
-            'rotation_id' => $rotation->id
-        ]);
-
 
         $response = $this->getJson("api/rotations/{$rotation->id}/students")
             ->assertStatus(200);
@@ -40,6 +33,10 @@ class RotationStudentControllerTest extends TestCase
 
         $response->assertJsonStructure([
             '*' => ['apellido', 'nombre', 'telefono'],
+        ]);
+
+        $response->assertJsonFragment([
+            'id' => $student1->id,
         ]);
     }
 }
