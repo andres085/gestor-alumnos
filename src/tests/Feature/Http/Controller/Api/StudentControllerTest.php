@@ -18,7 +18,8 @@ class StudentControllerTest extends TestCase
 
         $student = Student::factory()->create();
 
-        $response = $this->postJson(route('students.store'), $student->toArray());
+        // $response = $this->postJson(route('students.store'), $student->toArray());
+        $response = $this->json('POST', 'api/students', $student->toArray());
 
         $response->assertJsonStructure(['id', 'apellido', 'nombre', 'dni', 'telefono', 'email', 'direccion'])->assertStatus(201);
 
@@ -32,7 +33,7 @@ class StudentControllerTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $response = $this->getJson(route('students.index'));
+        $response = $this->json('GET', 'api/students');
 
         $response->assertStatus(200);
     }
@@ -40,7 +41,7 @@ class StudentControllerTest extends TestCase
     public function test_error_404_if_student_not_found()
     {
 
-        $response = $this->getJson('students.show');
+        $response = $this->json('GET', 'api/students/-1');
 
         $response->assertStatus(404);
     }
@@ -50,11 +51,12 @@ class StudentControllerTest extends TestCase
 
         $student = Student::factory()->create();
 
-        $response = $this->getJson(route('students.show', $student->id));
+        $response = $this->json('GET', "api/students/{$student->id}");
 
         $response->assertStatus(200)
             ->assertExactJson([
                 'id' => $student->id,
+                'rotation_id' => null,
                 'apellido' => $student->apellido,
                 'nombre' => $student->nombre,
                 'dni' => (string)$student->dni,
@@ -67,7 +69,7 @@ class StudentControllerTest extends TestCase
     public function test_will_fail_is_student_to_update_is_not_found()
     {
 
-        $response = $this->putJson(route('students.update', -1));
+        $response = $this->json('PUT', 'api/students/-1');
 
         $response->assertStatus(404);
     }
@@ -79,7 +81,7 @@ class StudentControllerTest extends TestCase
 
         $student = Student::factory()->create();
 
-        $response = $this->putJson(route('students.update', $student->id), [
+        $response = $this->json('PUT', "api/students/$student->id", [
             'id' => $student->id,
             'apellido' => 'Paquito',
             'nombre' => $student->nombre,
@@ -98,7 +100,7 @@ class StudentControllerTest extends TestCase
     public function test_will_fail_is_student_to_be_deleted_is_not_found()
     {
 
-        $response = $this->deleteJson(route('students.destroy', -1));
+        $response = $this->json('DELETE', 'api/students/-1');
 
         $response->assertStatus(404);
     }
@@ -108,7 +110,7 @@ class StudentControllerTest extends TestCase
 
         $student = Student::factory()->create();
 
-        $response = $this->deleteJson(route('students.destroy', $student->id));
+        $response = $this->json('DELETE', "api/students/{$student->id}");
 
         $response->assertStatus(204);
 
@@ -118,7 +120,7 @@ class StudentControllerTest extends TestCase
     public function test_required_fields()
     {
 
-        $response = $this->postJson(route('students.store'), [
+        $response = $this->json('POST', 'api/students', [
             'email' => 'andres@mail.com',
             'direccion' => 'Colapiche 183'
         ]);
@@ -132,7 +134,7 @@ class StudentControllerTest extends TestCase
     public function test_email_is_valid()
     {
 
-        $response = $this->postJson(route('students.store'), [
+        $response = $this->json('POST', 'api/students', [
             'apellido' => 'Martinez',
             'nombre' => 'Andres',
             'dni' => 31794897,
@@ -147,7 +149,7 @@ class StudentControllerTest extends TestCase
     public function test_direccion_is_min_length_of_5()
     {
 
-        $response = $this->postJson(route('students.store'), [
+        $response = $this->json('POST', 'api/students', [
             'apellido' => 'Martinez',
             'nombre' => 'Andres',
             'dni' => 31794897,
@@ -162,7 +164,7 @@ class StudentControllerTest extends TestCase
     public function test_direccion_is_max_length_of_30()
     {
 
-        $response = $this->postJson(route('students.store'), [
+        $response = $this->json('POST', 'api/students', [
             'apellido' => 'Martinez',
             'nombre' => 'Andres',
             'dni' => 31794897,

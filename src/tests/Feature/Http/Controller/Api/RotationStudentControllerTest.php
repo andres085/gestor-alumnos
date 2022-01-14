@@ -27,7 +27,7 @@ class RotationStudentControllerTest extends TestCase
             'rotation_id' => $rotation->id
         ]);
 
-        $response = $this->getJson("api/rotations/{$rotation->id}/students")
+        $response = $this->json('GET', "api/rotations/{$rotation->id}/students")
             ->assertStatus(200);
 
 

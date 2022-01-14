@@ -20,7 +20,7 @@ class RotationControllerTest extends TestCase
 
         $rotation = Rotation::factory()->create();
 
-        $response = $this->postJson(route('rotations.store'), $rotation->toArray());
+        $response = $this->json('POST', 'api/rotations', $rotation->toArray());
 
         $response->assertJsonStructure(['id', 'numero', 'fecha', 'observaciones'])->assertStatus(201);
 
@@ -35,7 +35,7 @@ class RotationControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $response = $this->getJson(route('rotations.index'));
+        $response = $this->json('GET', 'api/rotations');
 
         $response->assertStatus(200);
     }
@@ -43,7 +43,7 @@ class RotationControllerTest extends TestCase
     public function test_error_404_if_rotation_not_found()
     {
 
-        $response = $this->getJson('api/rotations/-1');
+        $response = $this->json('GET', 'api/rotations/-1');
 
         $response->assertStatus(404);
     }
@@ -53,7 +53,7 @@ class RotationControllerTest extends TestCase
 
         $rotation = Rotation::factory()->create();
 
-        $response = $this->getJson(route('rotations.show', $rotation->id));
+        $response = $this->JSON('GET', "api/rotations/{$rotation->id}");
 
         $response->assertStatus(200)->assertJson($rotation->toArray());
     }
@@ -64,7 +64,7 @@ class RotationControllerTest extends TestCase
             'observaciones' => 'Este es un texto de prueba'
         ]);
 
-        $response = $this->putJson(route('rotations.update', $rotation->id), $rotation->toArray());
+        $response = $this->json('PUT', "api/rotations/{$rotation->id}", $rotation->toArray());
 
         $response->assertStatus(200)->assertJson([
             'observaciones' => $rotation->observaciones
@@ -75,7 +75,7 @@ class RotationControllerTest extends TestCase
     {
         $rotation = Rotation::factory()->create();
 
-        $response = $this->deleteJson(route('rotations.destroy', $rotation->id));
+        $response = $this->json('DELETE', "api/rotations/{$rotation->id}");
 
         $response->assertStatus(204);
 
@@ -85,7 +85,7 @@ class RotationControllerTest extends TestCase
     public function test_fecha_field_is_required()
     {
 
-        $response = $this->postJson(route('rotations.store'), [
+        $response = $this->json('POST', 'api/rotations', [
             'numero' => 1,
             'observaciones' => 'Test rotation 123'
         ]);
@@ -96,7 +96,7 @@ class RotationControllerTest extends TestCase
     public function test_numero_field_is_required()
     {
 
-        $response = $this->postJson(route('rotations.store'), [
+        $response = $this->json('POST', 'api/rotations', [
             'fecha' => Carbon::now(),
             'observaciones' => 'Test rotation 123'
         ]);
