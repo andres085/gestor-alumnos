@@ -24,7 +24,8 @@ class AttendanceStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'fecha' => 'required'
+            'fecha' => 'required',
+            'tema' => 'string'
         ];
     }
 

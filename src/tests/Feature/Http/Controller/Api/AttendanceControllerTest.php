@@ -15,6 +15,8 @@ class AttendanceControllerTest extends TestCase
 
     public function test_can_create_an_attendance()
     {
+        $this->withoutExceptionHandling();
+
         $attendance = Attendance::factory()->create();
 
         $response = $this->json('POST', 'api/attendances', $attendance->toArray());

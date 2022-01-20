@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\RotationController;
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\RotationStudentController;
+use App\Http\Controllers\Api\StudentAttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,4 @@ Route::apiResource('/students', StudentController::class);
 Route::apiResource('/rotations', RotationController::class);
 Route::apiResource('/rotations/{id}/students', RotationStudentController::class);
 Route::apiResource('/attendances', AttendanceController::class);
+Route::apiResource('/student-attendances', StudentAttendanceController::class);

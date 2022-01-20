@@ -19,8 +19,7 @@ class AttendanceController extends Controller
 
     public function store(AttendanceStoreRequest $request)
     {
-
-        $attendance = Attendance::create($request->validate());
+        $attendance = Attendance::create($request->validated());
 
         return response()->json($attendance, 201);
     }
