@@ -16,7 +16,6 @@ class StudentAttendanceController extends Controller
             $student = StudentAttendance::create($attendance);
             array_push($studentData, $student);
         }
-
         return response()->json($studentData, 201);
     }
 }

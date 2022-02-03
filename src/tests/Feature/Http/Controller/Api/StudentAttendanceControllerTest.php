@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controller\Api;
 
 use Tests\TestCase;
+use App\Models\Attendance;
 use App\Models\StudentAttendance;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -37,5 +38,50 @@ class StudentAttendanceControllerTest extends TestCase
                 'id' => $studentAttendances[0]->id
             ]
         );
+    }
+
+    public function test_a_relationship_is_deleted_if_attendance_is_deleted()
+    {
+        $this->withoutExceptionHandling();
+
+        $attendance = Attendance::factory()->create();
+
+        $studentAttendances = [
+            StudentAttendance::factory()->create([
+                'attendance_id' => $attendance->id,
+                'presente' => true,
+            ])
+        ];
+
+
+        $response1 = $this->json('POST', 'api/attendances', $attendance->toArray());
+
+        $response1->assertStatus(201);
+
+        $this->assertDatabaseHas('attendances', [
+            'id' => $attendance->id,
+            'tema' => $attendance->tema,
+            'fecha' => $attendance->fecha
+        ]);
+
+        $response2 = $this->json('POST', 'api/student-attendances', $studentAttendances);
+
+        $response2->assertStatus(201);
+
+        $this->assertDatabaseHas(
+            'student_attendances',
+            [
+                'attendance_id' => $attendance->id,
+                'id' => $studentAttendances[0]->id
+            ]
+        );
+
+        $response1 = $this->json('DELETE', "api/attendances/{$attendance->id}");
+
+        $response1->assertStatus(204);
+
+        $this->assertDatabaseMissing('attendances', $attendance->toArray());
+
+        $this->assertDatabaseMissing('student_attendances', $studentAttendances[0]->toArray());
     }
 }

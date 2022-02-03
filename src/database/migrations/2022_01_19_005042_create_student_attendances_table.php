@@ -16,7 +16,7 @@ class CreateStudentAttendancesTable extends Migration
         Schema::create('student_attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('students');
-            $table->foreignId('attendance_id')->constrained('attendances');
+            $table->foreignId('attendance_id')->constrained('attendances')->onDelete('cascade');
             $table->boolean('presente');
             $table->boolean('ausente');
             $table->timestamps();
