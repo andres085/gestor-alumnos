@@ -2,22 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Homework;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\HomeworkStoreRequest;
 
 class HomeworkController extends Controller
 {
-    public function store(Request $request)
+    public function store(HomeworkStoreRequest $request)
     {
 
-        $homework = Homework::create([
-            'student_id' => $request->student_id,
-            'tarea' => $request->tarea,
-            'observacion' => $request->observacion,
-            'fecha_entrega' => $request->fecha_entrega,
-            'calificacion' => $request->calificacion,
-        ]);
+        $homework = Homework::create($request->validated());
 
         return response()->json($homework, 201);
     }
