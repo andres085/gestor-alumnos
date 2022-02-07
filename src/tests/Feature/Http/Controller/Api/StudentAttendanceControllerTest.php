@@ -84,4 +84,30 @@ class StudentAttendanceControllerTest extends TestCase
 
         $this->assertDatabaseMissing('student_attendances', $studentAttendances[0]->toArray());
     }
+
+    public function test_can_update_the_student_attendance()
+    {
+
+        $this->withoutExceptionHandling();
+
+        $attendance = Attendance::factory()->create();
+
+        $studentAttendances = [
+            StudentAttendance::factory()->create([
+                'attendance_id' => $attendance->id,
+                'presente' => true,
+            ]),
+            StudentAttendance::factory()->create([
+                'attendance_id' => $attendance->id,
+                'presente' => false,
+            ]),
+        ];
+
+        $response = $this->json('PUT', "api/student-attendances/$attendance->id", $studentAttendances);
+
+        $response->assertStatus(200);
+
+        $this->assertTrue($studentAttendances[0]->presente);
+        $this->assertFalse($studentAttendances[1]->presente);
+    }
 }
