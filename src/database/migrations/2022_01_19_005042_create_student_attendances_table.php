@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRotationsTable extends Migration
+class CreateStudentAttendancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateRotationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('rotations', function (Blueprint $table) {
+        Schema::create('student_attendances', function (Blueprint $table) {
             $table->id();
-            $table->integer('numero');
-            $table->date('fecha');
-            $table->text('observaciones')->nullable();
+            $table->foreignId('student_id')->constrained('students');
+            $table->foreignId('attendance_id')->constrained('attendances')->onDelete('cascade');
+            $table->boolean('presente');
+            $table->boolean('ausente');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateRotationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rotations');
+        Schema::dropIfExists('student_attendances');
     }
 }
