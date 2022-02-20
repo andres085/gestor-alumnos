@@ -30,3 +30,4 @@ Route::apiResource('/rotations/{id}/students', RotationStudentController::class)
 Route::apiResource('/attendances', AttendanceController::class);
 Route::apiResource('/student-attendances', StudentAttendanceController::class);
 Route::apiResource('/homework', HomeworkController::class);
+Route::apiResource('/group-students', GroupStudentController::class);
