@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Homework extends Model
 {
@@ -16,4 +17,9 @@ class Homework extends Model
         'fecha_entrega',
         'calificacion'
     ];
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
 }
