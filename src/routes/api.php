@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\HomeworkController;
 use App\Http\Controllers\Api\RotationController;
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\RotationStudentController;
@@ -28,3 +29,4 @@ Route::apiResource('/rotations', RotationController::class);
 Route::apiResource('/rotations/{id}/students', RotationStudentController::class);
 Route::apiResource('/attendances', AttendanceController::class);
 Route::apiResource('/student-attendances', StudentAttendanceController::class);
+Route::apiResource('/homework', HomeworkController::class);

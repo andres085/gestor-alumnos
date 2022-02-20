@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Homework;
 use App\Models\Rotation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,5 +24,10 @@ class Student extends Model
     public function rotation()
     {
         return $this->belongsTo(Rotation::class);
+    }
+
+    public function homeworks()
+    {
+        return $this->hasMany(Homework::class);
     }
 }
