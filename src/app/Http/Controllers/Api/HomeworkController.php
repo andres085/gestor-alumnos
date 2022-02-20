@@ -27,7 +27,6 @@ class HomeworkController extends Controller
 
     public function store(HomeworkStoreRequest $request)
     {
-
         $homework = Homework::create($request->validated());
 
         return response()->json($homework, 201);

@@ -26,10 +26,19 @@ class HomeworkStoreRequest extends FormRequest
         return [
             'student_id' => 'nullable',
             'rotation_id' => 'nullable',
-            'tarea' => 'required',
+            'tarea' => 'required | string',
             'observacion' => 'nullable | string',
             'fecha_entrega' => 'required',
             'calificacion' => 'nullable | integer',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'tarea.required' => 'El campo tarea es requerido',
+            'tarea.string' => 'El campo tarea es de solo texto',
+            'fecha_entrega.required' => 'El campo fecha entrega es requerido',
         ];
     }
 }

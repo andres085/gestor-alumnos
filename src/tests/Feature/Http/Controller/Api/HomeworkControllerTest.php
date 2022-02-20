@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controller\Api;
 use Tests\TestCase;
 use App\Models\Student;
 use App\Models\Homework;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -104,5 +105,39 @@ class HomeworkControllerTest extends TestCase
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('homework', $this->homework->toArray());
+    }
+
+    public function test_that_tarea_field_is_required()
+    {
+        $response = $this->json('POST', '/api/homework', [
+            'observacion' => 'Observacion test',
+            'fecha_entrega' => Carbon::now(),
+            'calificacion' => 7
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.tarea', ["El campo tarea es requerido"]);
+    }
+
+    public function test_that_tarea_field_text_only()
+    {
+        $response = $this->json('POST', '/api/homework', [
+            'tarea' => 11234,
+            'observacion' => 'Observacion test',
+            'fecha_entrega' => Carbon::now(),
+            'calificacion' => 7
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.tarea', ["El campo tarea es de solo texto"]);
+    }
+
+    public function test_that_fecha_field_is_required()
+    {
+        $response = $this->json('POST', '/api/homework', [
+            'tarea' => 'Tarea Circuitos',
+            'observacion' => 'Observacion test',
+            'calificacion' => 7
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.fecha_entrega', ["El campo fecha entrega es requerido"]);
     }
 }
