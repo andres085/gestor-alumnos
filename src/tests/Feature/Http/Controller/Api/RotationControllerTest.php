@@ -53,7 +53,7 @@ class RotationControllerTest extends TestCase
 
         $rotation = Rotation::factory()->create();
 
-        $response = $this->JSON('GET', "api/rotations/{$rotation->id}");
+        $response = $this->json('GET', "api/rotations/{$rotation->id}");
 
         $response->assertStatus(200)->assertJson($rotation->toArray());
     }
