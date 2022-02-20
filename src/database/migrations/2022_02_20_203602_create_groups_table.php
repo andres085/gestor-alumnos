@@ -15,6 +15,7 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('rotation_id')->constrained('rotations')->onDelete('cascade');
             $table->integer('numero');
             $table->timestamps();
         });

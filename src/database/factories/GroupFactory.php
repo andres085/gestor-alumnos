@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Rotation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class GroupFactory extends Factory
@@ -15,6 +16,9 @@ class GroupFactory extends Factory
     {
         return [
             'numero' => $this->faker->numberBetween(1, 2),
+            'rotation_id' => function () {
+                return Rotation::factory()->create()->id;
+            },
         ];
     }
 }

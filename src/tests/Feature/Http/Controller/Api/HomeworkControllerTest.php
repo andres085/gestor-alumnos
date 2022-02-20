@@ -85,7 +85,7 @@ class HomeworkControllerTest extends TestCase
             'tarea' => 'Circuitos Paralelo',
         ]);
 
-        $response = $this->json('PUT', "/api/homework/{$homework->id}");
+        $response = $this->json('PUT', "/api/homework/{$homework->id}", $homework->toArray());
 
         $response->assertStatus(200)->assertJson([
             'tarea' => $homework->tarea

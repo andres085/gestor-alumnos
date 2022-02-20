@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controller\Api;
 
 use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\Group;
 use App\Models\Rotation;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;

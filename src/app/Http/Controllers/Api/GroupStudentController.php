@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\Group;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class GroupStudentController extends Controller
 {
@@ -18,16 +19,6 @@ class GroupStudentController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -35,7 +26,12 @@ class GroupStudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $group = Group::create([
+            'numero' => $request->numero,
+            'rotation_id' => $request->rotation_id,
+        ]);
+
+        return response()->json($group, 201);
     }
 
     /**
@@ -46,19 +42,11 @@ class GroupStudentController extends Controller
      */
     public function show($id)
     {
-        //
+        $group = Group::findOrFail($id);
+
+        return response()->json($group, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -67,9 +55,15 @@ class GroupStudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $group = Group::findOrFail($request->id);
+
+        $group->update([
+            'numero' => $request->numero
+        ]);
+
+        return response()->json($group, 200);
     }
 
     /**
@@ -80,6 +74,10 @@ class GroupStudentController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $group = Group::findOrFail($id);
+
+        $group->delete();
+
+        return response()->json([], 204);
     }
 }
