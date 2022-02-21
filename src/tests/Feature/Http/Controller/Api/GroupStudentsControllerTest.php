@@ -13,16 +13,21 @@ class GroupStudentsControllerTest extends TestCase
     use DatabaseMigrations;
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->group = Group::factory()->create();
+    }
+
     public function test_can_create_a_group()
     {
-        $group = Group::factory()->create();
-
-        $response = $this->json('POST', '/api/group-students', $group->toArray());
+        $response = $this->json('POST', '/api/group-students', $this->group->toArray());
 
         $response->assertStatus(201);
         $this->assertDatabaseHas('groups', [
-            'id' => $group->id,
-            'numero' => $group->numero
+            'id' => $this->group->id,
+            'numero' => $this->group->numero
         ]);
     }
 
@@ -39,12 +44,10 @@ class GroupStudentsControllerTest extends TestCase
 
     public function test_can_show_a_group_and_the_students_in_it()
     {
-        $group = Group::factory()->create();
-
-        $response = $this->json('GET', "/api/group-students/{$group->id}");
+        $response = $this->json('GET', "/api/group-students/{$this->group->id}");
 
         $response->assertStatus(200)->assertJson([
-            'numero' => $group->numero
+            'numero' => $this->group->numero
         ]);
     }
 
@@ -63,19 +66,20 @@ class GroupStudentsControllerTest extends TestCase
 
     public function test_error_404_if_group_to_update_not_found()
     {
-        $response = $this->json('PUT', "/api/group-students/-1");
+        $response = $this->json('PUT', "/api/group-students/-1", [
+            'numero' => 1,
+            'rotation_id' => 1
+        ]);
 
         $response->assertStatus(404);
     }
 
     public function test_can_delete_a_group()
     {
-        $group = Group::factory()->create();
-
-        $response = $this->json('DELETE', "/api/group-students/{$group->id}");
+        $response = $this->json('DELETE', "/api/group-students/{$this->group->id}");
 
         $response->assertStatus(204);
-        $this->assertDatabaseMissing('groups', $group->toArray());
+        $this->assertDatabaseMissing('groups', $this->group->toArray());
     }
 
     public function test_error_404_if_group_to_delete_not_found()
@@ -85,11 +89,41 @@ class GroupStudentsControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_number_is_required()
+    public function test_number_is_required_for_store()
     {
+
+        $response = $this->json('POST', '/api/group-students', [
+            'rotation_id' => 1
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.numero', ["El campo número es requerido"]);
     }
 
-    public function test_rotation_is_required()
+    public function test_rotation_is_required_for_store()
     {
+        $response = $this->json('POST', '/api/group-students', [
+            'numero' => 1
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.rotation_id', ["El campo rotación es requerido"]);
+    }
+
+    public function test_number_is_required_for_update()
+    {
+
+        $response = $this->json('PUT', '/api/group-students/1', [
+            'rotation_id' => 1
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.numero', ["El campo número es requerido"]);
+    }
+
+    public function test_rotation_is_required_for_update()
+    {
+        $response = $this->json('PUT', '/api/group-students/1', [
+            'numero' => 1
+        ]);
+
+        $response->assertStatus(422)->assertJsonPath('errors.rotation_id', ["El campo rotación es requerido"]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Group;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GroupStudentStoreRequest;
 
 class GroupStudentController extends Controller
 {
@@ -24,12 +25,9 @@ class GroupStudentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(GroupStudentStoreRequest $request)
     {
-        $group = Group::create([
-            'numero' => $request->numero,
-            'rotation_id' => $request->rotation_id,
-        ]);
+        $group = Group::create($request->validated());
 
         return response()->json($group, 201);
     }
@@ -55,13 +53,11 @@ class GroupStudentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(GroupStudentStoreRequest $request)
     {
         $group = Group::findOrFail($request->id);
 
-        $group->update([
-            'numero' => $request->numero
-        ]);
+        $group->update($request->validated());
 
         return response()->json($group, 200);
     }
