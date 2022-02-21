@@ -28,7 +28,7 @@ class RotationController extends Controller
 
     public function show(Rotation $rotation)
     {
-        return response()->json($rotation);
+        return response()->json($rotation, 200);
     }
 
     public function update(Request $request)

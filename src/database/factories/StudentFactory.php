@@ -14,12 +14,12 @@ class StudentFactory extends Factory
     public function definition()
     {
         return [
-            'apellido' => 'Martinez',
-            'nombre' => 'Andrés',
-            'dni' => 31794897,
-            'telefono' => '2920-542448',
-            'email' => 'andresm.webdev@gmail.com',
-            'direccion' => 'Colapiche 183'
+            'apellido' => $this->faker->lastName(),
+            'nombre' => $this->faker->name(),
+            'dni' => $this->faker->randomNumber(9, $strict = true),
+            'telefono' => $this->faker->phoneNumber(),
+            'email' => $this->faker->email(),
+            'direccion' => $this->faker->address()
         ];
     }
 }
