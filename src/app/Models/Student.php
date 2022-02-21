@@ -30,4 +30,9 @@ class Student extends Model
     {
         return $this->hasMany(Homework::class);
     }
+
+    public function attendance()
+    {
+        return $this->belongsToMany(Attendance::class, 'student_attendances')->withPivot('presente', 'ausente');
+    }
 }
