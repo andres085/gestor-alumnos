@@ -16,29 +16,36 @@ class RotationControllerTest extends TestCase
     use DatabaseMigrations;
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->rotation = Rotation::factory()->create();
+    }
+
+
     public function test_can_create_a_rotation()
     {
+        $response = $this->json('POST', 'api/rotations', $this->rotation->toArray());
 
-        $rotation = Rotation::factory()->create();
-
-        $response = $this->json('POST', 'api/rotations', $rotation->toArray());
-
-        $response->assertJsonStructure(['id', 'numero', 'fecha', 'observaciones'])->assertStatus(201);
+        $response->assertStatus(201)->assertJsonStructure(['id', 'numero', 'fecha', 'observaciones']);
 
         $this->assertDatabaseHas('rotations', [
-            'numero' => $rotation->numero,
-            'fecha' => $rotation->fecha,
-            'observaciones' => $rotation->observaciones,
+            'numero' => $this->rotation->numero,
+            'fecha' => $this->rotation->fecha,
+            'observaciones' => $this->rotation->observaciones,
         ]);
     }
 
     public function test_can_get_all_rotations()
     {
-        $this->withoutExceptionHandling();
-
         $response = $this->json('GET', 'api/rotations');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJson([
+            [
+                'id' => $this->rotation->id,
+            ]
+        ]);
     }
 
     public function test_error_404_if_rotation_not_found()
@@ -51,12 +58,9 @@ class RotationControllerTest extends TestCase
 
     public function test_can_return_a_rotation()
     {
+        $response = $this->json('GET', "api/rotations/{$this->rotation->id}");
 
-        $rotation = Rotation::factory()->create();
-
-        $response = $this->json('GET', "api/rotations/{$rotation->id}");
-
-        $response->assertStatus(200)->assertJson($rotation->toArray());
+        $response->assertStatus(200)->assertJson($this->rotation->toArray());
     }
 
     public function test_can_update_a_rotation()
@@ -74,13 +78,11 @@ class RotationControllerTest extends TestCase
 
     public function test_delete_a_rotation()
     {
-        $rotation = Rotation::factory()->create();
-
-        $response = $this->json('DELETE', "api/rotations/{$rotation->id}");
+        $response = $this->json('DELETE', "api/rotations/{$this->rotation->id}");
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('rotations', $rotation->toArray());
+        $this->assertDatabaseMissing('rotations', $this->rotation->toArray());
     }
 
     public function test_fecha_field_is_required()

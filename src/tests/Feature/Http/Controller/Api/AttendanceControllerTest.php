@@ -13,20 +13,24 @@ class AttendanceControllerTest extends TestCase
     use DatabaseMigrations;
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->attendance = Attendance::factory()->create();
+    }
+
+
     public function test_can_create_an_attendance()
     {
-        $this->withoutExceptionHandling();
+        $response = $this->json('POST', 'api/attendances', $this->attendance->toArray());
 
-        $attendance = Attendance::factory()->create();
-
-        $response = $this->json('POST', 'api/attendances', $attendance->toArray());
-
-        $response->assertJsonStructure(['id', 'tema', 'fecha'])->assertStatus(201);
+        $response->assertStatus(201)->assertJsonStructure(['id', 'tema', 'fecha']);
 
         $this->assertDatabaseHas('attendances', [
-            'id' => $attendance->id,
-            'tema' => $attendance->tema,
-            'fecha' => $attendance->fecha
+            'id' => $this->attendance->id,
+            'tema' => $this->attendance->tema,
+            'fecha' => $this->attendance->fecha
         ]);
     }
 
@@ -47,12 +51,9 @@ class AttendanceControllerTest extends TestCase
 
     public function test_can_return_an_attendance()
     {
+        $response = $this->json('GET', "api/attendances/{$this->attendance->id}");
 
-        $attendance = Attendance::factory()->create();
-
-        $response = $this->json('GET', "api/attendances/{$attendance->id}");
-
-        $response->assertStatus(200)->assertJson($attendance->toArray());
+        $response->assertStatus(200)->assertJson($this->attendance->toArray());
     }
 
     public function test_error_404_if_attendance_to_update_not_found()
@@ -64,8 +65,6 @@ class AttendanceControllerTest extends TestCase
 
     public function test_can_update_an_attendance()
     {
-        $this->withoutExceptionHandling();
-
         $attendance = Attendance::factory()->create([
             'tema' => 'Electricidad Introducción'
         ]);
@@ -85,14 +84,11 @@ class AttendanceControllerTest extends TestCase
 
     public function test_can_delete_an_attendance()
     {
-
-        $attendance = Attendance::factory()->create();
-
-        $response = $this->json('DELETE', "api/attendances/{$attendance->id}");
+        $response = $this->json('DELETE', "api/attendances/{$this->attendance->id}");
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('attendances', $attendance->toArray());
+        $this->assertDatabaseMissing('attendances', $this->attendance->toArray());
     }
 
     public function test_fecha_field_is_required()
