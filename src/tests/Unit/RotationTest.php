@@ -26,11 +26,11 @@ class RotationTest extends TestCase
     {
         $rotation = Rotation::factory()->create();
 
-        $student1 = Student::factory()->create([
+        $student = Student::factory()->create([
             'rotation_id' => $rotation->id
         ]);
 
-        $this->assertTrue($rotation->students->contains($student1));
+        $this->assertTrue($rotation->students->contains($student));
         $this->assertEquals(1, $rotation->students->count());
     }
 }
