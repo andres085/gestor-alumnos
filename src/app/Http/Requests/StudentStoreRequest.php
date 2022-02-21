@@ -30,7 +30,7 @@ class StudentStoreRequest extends FormRequest
             'dni' => 'required | integer',
             'telefono' => 'required',
             'email' => 'email',
-            'direccion' => 'min:5 | max:30'
+            'direccion' => 'min:5 | max:50'
         ];
     }
 
@@ -43,7 +43,7 @@ class StudentStoreRequest extends FormRequest
             'telefono.required' => 'El campo telefono es requerido',
             'email.email' => 'El campo email debe ser valido',
             'direccion.min' => 'El campo dirección no puede contener un minimo de 5 caracteres',
-            'direccion.max' => 'El campo dirección no puede contener un maximo de 30 caracteres',
+            'direccion.max' => 'El campo dirección no puede contener un maximo de 50 caracteres',
         ];
     }
 }

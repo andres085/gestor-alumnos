@@ -13,29 +13,34 @@ class StudentControllerTest extends TestCase
     use DatabaseMigrations;
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->student = Student::factory()->create();
+    }
+
+
     public function test_can_create_a_student()
     {
+        $response = $this->json('POST', 'api/students', $this->student->toArray());
 
-        $student = Student::factory()->create();
-
-        // $response = $this->postJson(route('students.store'), $student->toArray());
-        $response = $this->json('POST', 'api/students', $student->toArray());
-
-        $response->assertJsonStructure(['id', 'apellido', 'nombre', 'dni', 'telefono', 'email', 'direccion'])->assertStatus(201);
+        $response->assertStatus(201)->assertJsonStructure(['id', 'apellido', 'nombre', 'dni', 'telefono', 'email', 'direccion']);
 
         $this->assertDatabaseHas('students', [
-            'dni' => $student->dni
+            'dni' => $this->student->dni
         ]);
     }
 
     public function test_can_get_all_students()
     {
-
-        $this->withoutExceptionHandling();
-
         $response = $this->json('GET', 'api/students');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJson([
+            [
+                'id' => $this->student->id,
+            ]
+        ]);;
     }
 
     public function test_error_404_if_student_not_found()
@@ -48,21 +53,18 @@ class StudentControllerTest extends TestCase
 
     public function test_can_return_a_student()
     {
-
-        $student = Student::factory()->create();
-
-        $response = $this->json('GET', "api/students/{$student->id}");
+        $response = $this->json('GET', "api/students/{$this->student->id}");
 
         $response->assertStatus(200)
             ->assertExactJson([
-                'id' => $student->id,
+                'id' => $this->student->id,
                 'rotation_id' => null,
-                'apellido' => $student->apellido,
-                'nombre' => $student->nombre,
-                'dni' => (string)$student->dni,
-                'telefono' => $student->telefono,
-                'email' => $student->email,
-                'direccion' => $student->direccion,
+                'apellido' => $this->student->apellido,
+                'nombre' => $this->student->nombre,
+                'dni' => (string)$this->student->dni,
+                'telefono' => $this->student->telefono,
+                'email' => $this->student->email,
+                'direccion' => $this->student->direccion,
             ]);
     }
 
@@ -79,15 +81,13 @@ class StudentControllerTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $student = Student::factory()->create();
-
-        $response = $this->json('PUT', "api/students/$student->id", [
-            'id' => $student->id,
+        $response = $this->json('PUT', "api/students/{$this->student->id}", [
+            'id' => $this->student->id,
             'apellido' => 'Paquito',
-            'nombre' => $student->nombre,
-            'dni' => (string)$student->dni,
-            'telefono' => $student->telefono,
-            'email' => $student->email,
+            'nombre' => $this->student->nombre,
+            'dni' => (string)$this->student->dni,
+            'telefono' => $this->student->telefono,
+            'email' => $this->student->email,
             'direccion' => 'Las Heras 1732',
         ]);
 
@@ -108,13 +108,11 @@ class StudentControllerTest extends TestCase
     public function test_a_student_can_be_deleted()
     {
 
-        $student = Student::factory()->create();
-
-        $response = $this->json('DELETE', "api/students/{$student->id}");
+        $response = $this->json('DELETE', "api/students/{$this->student->id}");
 
         $response->assertStatus(204);
 
-        $this->assertDatabaseMissing('students', $student->toArray());
+        $this->assertDatabaseMissing('students', $this->student->toArray());
     }
 
     public function test_required_fields()
@@ -161,7 +159,7 @@ class StudentControllerTest extends TestCase
         $response->assertStatus(422)->assertJsonPath('errors.direccion', ['El campo dirección no puede contener un minimo de 5 caracteres']);
     }
 
-    public function test_direccion_is_max_length_of_30()
+    public function test_direccion_is_max_length_of_50()
     {
 
         $response = $this->json('POST', 'api/students', [
@@ -170,9 +168,9 @@ class StudentControllerTest extends TestCase
             'dni' => 31794897,
             'telefono' => '2920-542448',
             'email' => 'andres@mail.com',
-            'direccion' => 'Colapiche 183 Viedma Rio Negro, Barrio Don Bosco'
+            'direccion' => 'Colapiche 183 Viedma Rio Negro, Barrio Don Bosco Al lado de la cancha de villa congreso paralelo a ruta 1'
         ]);
 
-        $response->assertStatus(422)->assertJsonPath('errors.direccion', ['El campo dirección no puede contener un maximo de 30 caracteres']);
+        $response->assertStatus(422)->assertJsonPath('errors.direccion', ['El campo dirección no puede contener un maximo de 50 caracteres']);
     }
 }

@@ -19,8 +19,6 @@ class RotationStudentControllerTest extends TestCase
     public function can_get_students_from_a_rotation()
     {
 
-        $this->withoutExceptionHandling();
-
         $rotation = Rotation::factory()->create();
 
         $student1 = Student::factory()->create([
