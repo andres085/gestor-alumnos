@@ -58,13 +58,13 @@ class StudentControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertExactJson([
                 'id' => $this->student->id,
-                'rotation_id' => null,
                 'apellido' => $this->student->apellido,
                 'nombre' => $this->student->nombre,
                 'dni' => (string)$this->student->dni,
                 'telefono' => $this->student->telefono,
                 'email' => $this->student->email,
                 'direccion' => $this->student->direccion,
+                'rotation_id' => null,
             ]);
     }
 

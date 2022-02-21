@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Rotation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StudentFactory extends Factory
@@ -19,7 +20,7 @@ class StudentFactory extends Factory
             'dni' => $this->faker->randomNumber(9, $strict = true),
             'telefono' => $this->faker->phoneNumber(),
             'email' => $this->faker->email(),
-            'direccion' => $this->faker->address()
+            'direccion' => $this->faker->streetAddress(),
         ];
     }
 }
