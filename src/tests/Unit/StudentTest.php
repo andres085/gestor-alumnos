@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Models\Group;
 use App\Models\Student;
 use App\Models\Homework;
 use App\Models\Rotation;
@@ -61,5 +62,17 @@ class StudentTest extends TestCase
         ]);
 
         $this->assertEquals(3, $student->attendance->count());
+    }
+
+    public function test_a_student_belongs_to_a_group()
+    {
+        $group = Group::factory()->create();
+
+        $student = Student::factory()->create([
+            'group_id' => $group->id
+        ]);
+
+        $this->assertEquals(1, $student->group->count());
+        $this->assertInstanceOf(Group::class, $student->group);
     }
 }
