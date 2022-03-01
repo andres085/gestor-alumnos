@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Group extends Model
 {
@@ -13,4 +14,9 @@ class Group extends Model
         'numero',
         'rotation_id',
     ];
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
 }
