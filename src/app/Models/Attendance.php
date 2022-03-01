@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Student;
+use App\Models\StudentAttendance;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Attendance extends Model
 {
@@ -13,4 +15,9 @@ class Attendance extends Model
         'tema',
         'fecha',
     ];
+
+    public function students()
+    {
+        return $this->hasManyThrough(Student::class, StudentAttendance::class, 'attendance_id', 'id', 'id', 'id');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Group;
 use App\Models\Homework;
 use App\Models\Rotation;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ class Student extends Model
 
     protected $fillable = [
         'rotation_id',
+        'group_id',
         'apellido',
         'nombre',
         'dni',
@@ -29,5 +31,15 @@ class Student extends Model
     public function homeworks()
     {
         return $this->hasMany(Homework::class);
+    }
+
+    public function attendance()
+    {
+        return $this->belongsToMany(Attendance::class, 'student_attendances')->withPivot('presente', 'ausente');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 }
