@@ -2,10 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Models\Homework;
 use Tests\TestCase;
 use App\Models\Student;
+use App\Models\Homework;
 use App\Models\Rotation;
+use App\Models\StudentAttendance;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class StudentTest extends TestCase
@@ -28,18 +29,37 @@ class StudentTest extends TestCase
     {
         $student = Student::factory()->create();
 
-        $homework1 = Homework::factory()->create([
+        Homework::factory()->create([
             'student_id' => $student->id
         ]);
 
-        $homework2 = Homework::factory()->create([
+        Homework::factory()->create([
             'student_id' => $student->id
         ]);
 
-        $homework3 = Homework::factory()->create([
+        Homework::factory()->create([
             'student_id' => $student->id
         ]);
 
         $this->assertEquals(3, $student->homeworks->count());
+    }
+
+    public function test_a_student_has_many_attendances_through_pivot_table()
+    {
+        $student = Student::factory()->create();
+
+        StudentAttendance::factory()->create([
+            'student_id' => $student->id,
+        ]);
+
+        StudentAttendance::factory()->create([
+            'student_id' => $student->id,
+        ]);
+
+        StudentAttendance::factory()->create([
+            'student_id' => $student->id,
+        ]);
+
+        $this->assertEquals(3, $student->attendance->count());
     }
 }

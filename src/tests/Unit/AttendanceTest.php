@@ -21,17 +21,17 @@ class AttendanceTest extends TestCase
         $student2 = Student::factory()->create();
         $student3 = Student::factory()->create();
 
-        $studentAttendance1 = StudentAttendance::factory()->create([
+        StudentAttendance::factory()->create([
             'attendance_id' => $attendance->id,
             'student_id' => $student1->id,
         ]);
 
-        $studentAttendance2 = StudentAttendance::factory()->create([
+        StudentAttendance::factory()->create([
             'attendance_id' => $attendance->id,
             'student_id' => $student2->id,
         ]);
 
-        $studentAttendance3 = StudentAttendance::factory()->create([
+        StudentAttendance::factory()->create([
             'attendance_id' => $attendance->id,
             'student_id' => $student3->id,
         ]);
